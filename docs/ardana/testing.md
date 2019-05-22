@@ -198,9 +198,9 @@ Setting up a local Cloud test environment:
 * clone the [automation repository](https://github.com/SUSE-Cloud/automation) locally
 * for building test packages from gerrit changes, the osc utility needs to be correctly installed and configured on
 the local host.
-* Install openstack cli client:
+* Install openstack cli client and sshpass:
 ```
-sudo zypper install python-openstackclient
+sudo zypper install python-openstackclient sshpass
 ```
 * set up an OpenStack cloud configuration reflecting your engineering or SUSE cloud credentials (for virtual Cloud environments).
 To do that, create an `~/.config/openstack/clouds.yaml` file reflecting your OpenStack cloud accounts:
