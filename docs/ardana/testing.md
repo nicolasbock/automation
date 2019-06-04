@@ -200,7 +200,7 @@ Setting up a local Cloud test environment:
 the local host.
 * Install openstack cli client and sshpass:
 ```
-sudo zypper install python-openstackclient sshpass
+sudo zypper install python-openstackclient python-heatclient sshpass
 ```
 * set up an OpenStack cloud configuration reflecting your engineering or SUSE cloud credentials (for virtual Cloud environments).
 To do that, create an `~/.config/openstack/clouds.yaml` file reflecting your OpenStack cloud accounts:
