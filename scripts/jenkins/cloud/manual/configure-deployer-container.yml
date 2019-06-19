@@ -1,0 +1,32 @@
+---
+
+- name: Create deployer container
+  hosts: ci-deployer
+  connection: docker
+  remote_user: root
+  gather_facts: False
+  tasks:
+    - name: Read cloud config files
+      set_fact:
+        clouds: "{{ lookup('file', item) | from_yaml | combine(clouds | default({}), recursive=True) }}"
+      with_fileglob:
+        - "{{ lookup('env', 'HOME') + '/.config/openstack/*' }}"
+
+    - name: Replace cacert paths
+      set_fact:
+        clouds: "{{ clouds | combine(cacert, recursive=True) }}"
+      vars:
+        cacert: "{ 'clouds': { '{{ item }}': { 'cacert': '/usr/share/pki/trust/anchors/SUSE_Trust_Root.crt.pem' } } }"
+      with_items: |
+        [ {% for cloud in clouds['clouds'] %} '{{ cloud }}', {% endfor %} ]
+
+    - name: Create config directory
+      file:
+        state: directory
+        dest: "/root/.config/openstack"
+        recurse: True
+
+    - name: Write clouds.yaml
+      copy:
+        content: "{{ clouds | to_nice_yaml(width=70, explicit_start=True, explicit_end=True) }}"
+        dest: "/root/.config/openstack/clouds.yaml"

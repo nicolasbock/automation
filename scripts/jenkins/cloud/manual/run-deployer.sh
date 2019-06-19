@@ -16,11 +16,11 @@ ionice -c idle ${CLI} build --tag ci-deployer \
 ${CLI} create --interactive --tty \
     --name ci-deployer \
     --volume "${basedir}":/opt/automation \
-    --volume "${HOME}/.config/openstack":/root/.config/openstack:ro \
     ${EXTRA_ARGS:-} \
     ci-deployer
 ${CLI} start ci-deployer
 
-# ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook prepare-deployer-container.yml
+ANSIBLE_STDOUT_CALLBACK=debug ansible-playbook --inventory ci-deployer, \
+    configure-deployer-container.yml
 
 ${CLI} attach ci-deployer
