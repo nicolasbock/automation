@@ -25,3 +25,15 @@
       {{ key }}
       {% endfor %}
       {% endfor %}
+
+- name: Create local SSH key on deployer
+  shell: ssh-keygen -t rsa -f "{{ ansible_env.HOME }}/.ssh/id_rsa" -N ""
+  delegate_to: localhost
+  args:
+    creates: "{{ ansible_env.HOME }}/.ssh/id_rsa"
+
+- name: Copy local SSH key to deployer
+  lineinfile:
+    path: "{{ ansible_env.HOME }}/.ssh/authorized_keys"
+    create: yes
+    line: "{{ lookup('file', ansible_env.HOME + '/.ssh/id_rsa.pub') }}"
